@@ -13,6 +13,10 @@ metadata:
     autoscaling.knative.dev/panicThresholdPercentage: "190"
     autoscaling.knative.dev/scaleDownDelay: "200s"
     autoscaling.knative.dev/target-burst-capacity: "1"
+    serving.knative.dev/timeoutSeconds: "900"  # 15 minutes
+    serving.knative.dev/responseDurationSeconds: "900"  # 15 minutes
+    serving.knative.dev/queueProxyReadTimeout: "900s"  # 15 minutes
+    serving.knative.dev/queueProxyWriteTimeout: "900s"  # 15 minutes
 spec:
   predictor:
     containerConcurrency: 1
