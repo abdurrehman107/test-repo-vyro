@@ -19,6 +19,7 @@ metadata:
     serving.knative.dev/queueProxyWriteTimeout: "900s"  # 15 minutes
 spec:
   predictor:
+    timeoutSeconds: 900
     containerConcurrency: 1
     minReplicas: 2
     maxReplicas: 2
