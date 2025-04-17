@@ -2,6 +2,7 @@ apiVersion: serving.kserve.io/v1beta1
 kind: InferenceService
 metadata:
   name: test-302
+  namespace: default
   labels:
     app: test-302
   annotations:
