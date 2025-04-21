@@ -1,0 +1,60 @@
+# grafana-certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-cert
+  namespace: kube-prometheus-stack
+spec:
+  secretName: grafana-tls # The secret storing the TLS certificate
+  dnsNames:
+  - "grafana.fluidstack.vyro.ai"
+  issuerRef:
+    name: letsencrypt-prod # Use the provided ClusterIssuer name
+    kind: ClusterIssuer
+---
+# grafana-gateway.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: grafana-gateway
+  namespace: kube-prometheus-stack
+spec:
+  selector:
+    app: istio-ingressgateway
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "grafana.fluidstack.vyro.ai"
+  # - port:
+  #     number: 80
+  #     name: https
+  #     protocol: HTTPS
+  #   hosts:
+  #   - "grafana.fluidstack.vyro.ai"
+  #   tls:
+  #     credentialName: grafana-tls # Matches the secretName from the Certificate resource
+#      mode: SIMPLE
+#      privateKey: tls.key
+#      serverCertificate: tls.crt
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: grafana-virtualservice
+  namespace: kube-prometheus-stack
+spec:
+  hosts:
+  - "grafana.fluidstack.vyro.ai"
+  gateways:
+  - grafana-gateway
+  http:
+  - route:
+    - destination:
+        host: kube-prometheus-stack-grafana.kube-prometheus-stack.svc.cluster.local
+        port:
+          number: 80
+          
